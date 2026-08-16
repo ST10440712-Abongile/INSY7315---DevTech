@@ -7192,7 +7192,7 @@ Only include arrays that have actual data from the document. Empty arrays are fi
             }
         };
 
-        const findingsHtml = riskReview.findings.map(f => {
+        const findingsHtml = riskReview.findings.map((f, index) => {
             const severity = severityStyle[f.severity] || severityStyle.low;
 
             return `
@@ -7211,10 +7211,18 @@ Only include arrays that have actual data from the document. Empty arrays are fi
         </div>
 
         <div style="font-size:12px;color:var(--ink);margin-top:7px">
-          <strong>Recommended:</strong>
-          ${esc(f.recommendation || 'Review this item manually.')}
-        </div>
-      </div>
+  <strong>Recommended:</strong>
+  ${esc(f.recommendation || 'Review this item manually.')}
+</div>
+
+<button
+  class="btn s"
+  style="margin-top:9px"
+  onclick="agInvestigateRisk(${index})">
+  🔎 Investigate with Ndalo
+</button>
+
+</div>
     `;
         }).join('');
 
@@ -8223,7 +8231,45 @@ function agChip(text) {
         if (!agentOpen) {
             toggleAgent();
         }
+        function agInvestigateRisk(index) {
+            const findings = window._ingestRiskReview?.findings || [];
+            const finding = findings[index];
 
+            if (!finding) return;
+
+            window._ingestDetailedMode = true;
+
+            const prompt =
+                'Investigate this potential business concern identified during the latest Smart Ingest risk review. ' +
+                'Use the detailed Smart Ingest records to determine which records are relevant, explain why the item was flagged, ' +
+                'and recommend a practical next step. ' +
+                'Do not invent facts or claim certainty where the data does not support it. ' +
+                'Potential concern: ' + (finding.title || 'Unknown') + '. ' +
+                'Category: ' + (finding.category || 'other') + '. ' +
+                'Severity: ' + (finding.severity || 'unknown') + '. ' +
+                'Description: ' + (finding.description || '') + '. ' +
+                'Original recommendation: ' + (finding.recommendation || '') + '.';
+
+            if (!agentOpen) {
+                toggleAgent();
+            }
+
+            setTimeout(() => {
+                const input = document.getElementById('ag-input');
+
+                if (!input) return;
+
+                input.value = prompt;
+                input.style.height = 'auto';
+                input.focus();
+
+                const chips = document.getElementById('ag-chips');
+
+                if (chips) {
+                    chips.style.display = 'none';
+                }
+            }, 150);
+        }
         // Give the panel a moment to open before populating the input
         setTimeout(() => {
             const input = document.getElementById('ag-input');
@@ -8602,7 +8648,7 @@ ${JSON.stringify(data)}
                 };
             }
         }
-        function agGetDetailedIngestContext() {
+        window.agGetDetailedIngestContext = function () {
             const data = window._ingestResults;
 
             if (!data) return '';
@@ -8798,9 +8844,11 @@ function agSystemPrompt() {
   const pipeV      = DB.deals.filter(d=>!['done','lost'].includes(d.stage)).reduce((s,d)=>s+d.value,0);
   const sarsDebt   = DB.debts.filter(d=>d.priority==='critical').reduce((s,d)=>s+d.balance,0);
     const ingestSummary = agGetIngestSummary();
-    const ingestDetails = window._ingestDetailedMode
-        ? agGetDetailedIngestContext()
-        : '';
+    const ingestDetails =
+        window._ingestDetailedMode &&
+            typeof window.agGetDetailedIngestContext === 'function'
+            ? window.agGetDetailedIngestContext()
+            : '';
   return `You are Ndalo Agent — the AI business intelligence and automation layer inside Ndalo Agents. You are a trusted, sharp, South African business advisor who speaks plainly and acts decisively. You serve as the operational backbone that removes administrative burden from the owner.
 
 BUSINESS CONTEXT:
