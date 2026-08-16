@@ -845,6 +845,81 @@ body{font-family:var(--sans);color:var(--ink);overflow:hidden;font-size:15px;lin
 .ag-chips{display:flex;gap:6px;flex-wrap:wrap;padding:0 12px 8px;}
 .ag-chip{background:var(--bg2);border:1px solid var(--rule);border-radius:20px;font-size:11px;color:var(--gm2);padding:4px 10px;cursor:pointer;white-space:nowrap;transition:all 0.15s;}
 .ag-chip:hover{background:var(--gp);border-color:var(--gm);color:var(--g);}
+    /* ── AI ERROR / RECOVERY UI ── */
+    .ag-error-card {
+        width: 100%;
+        max-width: 88%;
+        align-self: flex-start;
+        background: rgba(192,57,43,0.05);
+        border: 1px solid rgba(192,57,43,0.22);
+        border-left: 4px solid var(--red);
+        border-radius: 9px;
+        padding: 12px 14px;
+        color: var(--ink);
+    }
+
+    .ag-error-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--red);
+        margin-bottom: 4px;
+    }
+
+    .ag-error-text {
+        font-size: 12px;
+        line-height: 1.55;
+        color: var(--gm2);
+        margin-bottom: 10px;
+    }
+
+    .ag-error-actions {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .ag-error-btn {
+        border: 1px solid var(--rule);
+        background: var(--w);
+        color: var(--gm2);
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-size: 11px;
+        font-family: var(--sans);
+        cursor: pointer;
+        transition: all .15s;
+    }
+
+        .ag-error-btn:hover {
+            border-color: var(--g);
+            color: var(--g);
+            background: var(--gp);
+        }
+
+        .ag-error-btn.primary {
+            background: var(--g);
+            border-color: var(--g);
+            color: #fff;
+        }
+
+            .ag-error-btn.primary:hover {
+                background: var(--gm);
+            }
+
+    .ag-retry-spin {
+        display: inline-block;
+        animation: agRetrySpin .8s linear infinite;
+    }
+
+    @keyframes agRetrySpin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
 
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -8075,8 +8150,141 @@ function agShowTyping() {
   msgs.appendChild(agTypingEl);
   msgs.scrollTop = msgs.scrollHeight;
 }
-function agHideTyping() { agTypingEl?.remove(); agTypingEl = null; }
+    function agHideTyping() {
+        agTypingEl?.remove();
+        agTypingEl = null;
+    }
 
+
+    // ── AI error handling / recovery ──
+
+    let agLastPrompt = '';
+
+    function agGetErrorInfo(err) {
+        const message = String(err?.message || err || 'Unknown AI error');
+
+        if (message.includes('No API key configured')) {
+            return {
+                title: '⚠️ Ndalo Agent is offline',
+                text: 'No Anthropic API key has been configured. Configure your AI service in Settings before using Ndalo Agent.',
+                settings: true
+            };
+        }
+
+        if (
+            message.includes('Invalid API key') ||
+            message.includes('401')
+        ) {
+            return {
+                title: '🔑 AI authentication failed',
+                text: 'The Anthropic API key was rejected. Check your API key in Settings and try again.',
+                settings: true
+            };
+        }
+
+        if (
+            message.includes('Rate limit') ||
+            message.includes('429')
+        ) {
+            return {
+                title: '⏳ AI service is temporarily busy',
+                text: 'The AI service has reached its request limit. Please wait a moment and try again.',
+                settings: false
+            };
+        }
+
+        if (
+            message.includes('Cannot reach Ollama') ||
+            message.includes('Failed to fetch') ||
+            message.includes('NetworkError')
+        ) {
+            return {
+                title: '🌐 AI service could not be reached',
+                text: 'Ndalo Agent could not connect to the selected AI engine. Check your connection or AI engine settings.',
+                settings: true
+            };
+        }
+
+        return {
+            title: '⚠️ Ndalo Agent encountered a problem',
+            text: message,
+            settings: false
+        };
+    }
+
+
+    function agShowError(err) {
+        const msgs = document.getElementById('ag-msgs');
+        if (!msgs) return;
+
+        const info = agGetErrorInfo(err);
+
+        const card = document.createElement('div');
+        card.className = 'ag-error-card';
+
+        card.innerHTML = `
+    <div class="ag-error-title">${info.title}</div>
+
+    <div class="ag-error-text">
+      ${info.text}
+    </div>
+
+    <div class="ag-error-actions">
+      <button class="ag-error-btn primary" onclick="agRetryLast()">
+        ↻ Retry
+      </button>
+
+      ${info.settings ? `
+        <button class="ag-error-btn" onclick="agOpenAiSettings()">
+          ⚙ Open AI Settings
+        </button>
+      ` : ''}
+    </div>
+  `;
+
+        msgs.appendChild(card);
+        msgs.scrollTop = msgs.scrollHeight;
+    }
+
+
+    function agOpenAiSettings() {
+        showPanel('settings');
+
+        const appTab = document.getElementById('st-app');
+
+        if (appTab && typeof setSettingsTab === 'function') {
+            setSettingsTab('app', appTab);
+        }
+
+        setTimeout(() => {
+            const aiSection =
+                document.getElementById('api-key-input') ||
+                document.getElementById('ai-panel-anthropic');
+
+            if (aiSection) {
+                aiSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
+        }, 300);
+    }
+
+
+    async function agRetryLast() {
+        if (!agLastPrompt) {
+            agAppend('system', 'Nothing to retry yet.');
+            return;
+        }
+
+        const input = document.getElementById('ag-input');
+
+        if (!input) return;
+
+        input.value = agLastPrompt;
+
+        await agSend();
+    }
 // ── Send message ──
 async function agSend() {
   const input = document.getElementById('ag-input');
@@ -8084,7 +8292,11 @@ async function agSend() {
   const text  = (input.value || '').trim();
   if (!text && !agPendingFile) return;
 
-  const userText = agPendingFile ? `[Document: ${agPendingFile.name}] ${text||'Please process this document.'}` : text;
+    const userText = agPendingFile ? `[Document: ${agPendingFile.name}] ${text || 'Please process this document.'}` : text;
+    // Remember the latest request so it can be retried
+    if (text) {
+        agLastPrompt = text;
+    }
   agAppend('user', userText);
   document.getElementById('ag-chips').style.display = 'none';
   input.value = ''; input.style.height = 'auto';
@@ -8162,7 +8374,9 @@ async function agSend() {
 
   } catch (err) {
     agHideTyping();
-    agAppend('system', 'Error: ' + err.message);
+      console.error('[Ndalo Agent]', err);
+
+      agShowError(err);
   }
 
   btn.disabled = false;
