@@ -8140,6 +8140,7 @@ function agChip(text) {
   agSend();
 }
     function agAskAboutIngest() {
+        window._ingestDetailedMode = true;
         const prompt =
             'Analyse the Smart Ingest results from my latest document. ' +
             'Provide a clear business intelligence report using the following sections: ' +
@@ -8438,7 +8439,44 @@ async function agSend() {
 }
 
     // ── System prompt — includes live business context ──
-    function agGetIngestSummary() {
+    function agGetIngestSummary() { 
+        function agGetDetailedIngestContext() {
+            const data = window._ingestResults;
+
+            if (!data) return '';
+
+            const transactions = data.transactions || [];
+            const debts = data.debts || [];
+            const invoices = data.invoices || [];
+            const deals = data.deals || [];
+            const notes = data.notes || [];
+
+            // Limit the number of records sent to the AI
+            // to prevent extremely large prompts.
+            const limit = 25;
+
+            return `
+DETAILED SMART INGEST DATA
+
+TRANSACTIONS (${transactions.length} total):
+${JSON.stringify(transactions.slice(0, limit))}
+
+DEBTS (${debts.length} total):
+${JSON.stringify(debts.slice(0, limit))}
+
+INVOICES (${invoices.length} total):
+${JSON.stringify(invoices.slice(0, limit))}
+
+DEALS (${deals.length} total):
+${JSON.stringify(deals.slice(0, limit))}
+
+IMPORTANT NOTES (${notes.length} total):
+${JSON.stringify(notes.slice(0, limit))}
+
+Use these records only when answering questions about the recently
+ingested documents. Do not invent or modify any values.
+`;
+        }
         const data = window._ingestResults;
 
         if (!data) return '';
@@ -8502,7 +8540,10 @@ function agSystemPrompt() {
   const debtTot    = DB.debts.reduce((s,d)=>s+d.balance,0);
   const pipeV      = DB.deals.filter(d=>!['done','lost'].includes(d.stage)).reduce((s,d)=>s+d.value,0);
   const sarsDebt   = DB.debts.filter(d=>d.priority==='critical').reduce((s,d)=>s+d.balance,0);
-  const ingestSummary = agGetIngestSummary();
+    const ingestSummary = agGetIngestSummary();
+    const ingestDetails = window._ingestDetailedMode
+        ? agGetDetailedIngestContext()
+        : '';
   return `You are Ndalo Agent — the AI business intelligence and automation layer inside Ndalo Agents. You are a trusted, sharp, South African business advisor who speaks plainly and acts decisively. You serve as the operational backbone that removes administrative burden from the owner.
 
 BUSINESS CONTEXT:
@@ -8514,6 +8555,7 @@ BUSINESS CONTEXT:
 - Open pipeline: R${pipeV.toLocaleString()} across ${DB.deals.filter(d=>!['done','lost'].includes(d.stage)).length} deals
 - Contacts: ${(DB.contacts || []).length} | Proposals saved: ${DB.proposals.length}
 ${ingestSummary}
+${ingestDetails}
 
 BEHAVIOUR RULES:
 - Be concise and direct. This is a business tool, not a chatbot.
