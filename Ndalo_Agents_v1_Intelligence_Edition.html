@@ -8396,7 +8396,62 @@ async function agSend() {
   document.getElementById('ag-msgs').scrollTop = 9999;
 }
 
-// ── System prompt — includes live business context ──
+    // ── System prompt — includes live business context ──
+    function agGetIngestSummary() {
+        const data = window._ingestResults;
+
+        if (!data) return '';
+
+        const transactions = data.transactions || [];
+        const debts = data.debts || [];
+        const deals = data.deals || [];
+        const invoices = data.invoices || [];
+        const notes = data.notes || [];
+
+        const money = values =>
+            values.reduce((sum, value) => sum + (Number(value) || 0), 0);
+
+        const income = money(
+            transactions
+                .filter(t => t.direction === 'in')
+                .map(t => t.amount)
+        );
+
+        const expenses = money(
+            transactions
+                .filter(t => t.direction !== 'in')
+                .map(t => t.amount)
+        );
+
+        const totalDebt = money(
+            debts.map(d => d.amount_owed)
+        );
+
+        const totalInvoices = money(
+            invoices.map(i => i.amount)
+        );
+
+        const totalDeals = money(
+            deals.map(d => d.value)
+        );
+
+        return `
+SMART INGEST SUMMARY
+- Transactions found: ${transactions.length}
+- Income identified: R${income.toLocaleString()}
+- Expenses identified: R${expenses.toLocaleString()}
+- Debts found: ${debts.length}
+- Total debt identified: R${totalDebt.toLocaleString()}
+- Deals found: ${deals.length}
+- Pipeline value identified: R${totalDeals.toLocaleString()}
+- Invoices found: ${invoices.length}
+- Invoice value identified: R${totalInvoices.toLocaleString()}
+- Important notes: ${notes.length}
+
+The user has recently processed documents using Smart Ingest.
+Use this information when answering questions about the recently processed documents.
+`;
+    }
 function agSystemPrompt() {
   const entities   = getActiveEntities().map(e=>({id:e.id,name:e.name,short:e.short,type:e.type}));
   const activeInv  = DB.invoices.filter(i=>!['paid','draft','void'].includes(getInvStatus(i)));
@@ -8406,7 +8461,7 @@ function agSystemPrompt() {
   const debtTot    = DB.debts.reduce((s,d)=>s+d.balance,0);
   const pipeV      = DB.deals.filter(d=>!['done','lost'].includes(d.stage)).reduce((s,d)=>s+d.value,0);
   const sarsDebt   = DB.debts.filter(d=>d.priority==='critical').reduce((s,d)=>s+d.balance,0);
-  const ingestContext = window._ingestResults || null;
+  const ingestSummary = agGetIngestSummary();
   return `You are Ndalo Agent — the AI business intelligence and automation layer inside Ndalo Agents. You are a trusted, sharp, South African business advisor who speaks plainly and acts decisively. You serve as the operational backbone that removes administrative burden from the owner.
 
 BUSINESS CONTEXT:
@@ -8417,25 +8472,7 @@ BUSINESS CONTEXT:
 - Total debt: R${debtTot.toLocaleString()} | SARS (critical): R${sarsDebt.toLocaleString()}
 - Open pipeline: R${pipeV.toLocaleString()} across ${DB.deals.filter(d=>!['done','lost'].includes(d.stage)).length} deals
 - Contacts: ${(DB.contacts || []).length} | Proposals saved: ${DB.proposals.length}
-${ingestContext ? `
-SMART INGEST CONTEXT:
-The user has recently processed document(s) using Smart Ingest.
-
-Extracted transactions:
-${JSON.stringify(ingestContext.transactions || [])}
-
-Extracted debts:
-${JSON.stringify(ingestContext.debts || [])}
-
-Extracted deals:
-${JSON.stringify(ingestContext.deals || [])}
-
-Extracted invoices:
-${JSON.stringify(ingestContext.invoices || [])}
-
-Important notes:
-${JSON.stringify(ingestContext.notes || [])}
-` : ''}
+${ingestSummary}
 
 BEHAVIOUR RULES:
 - Be concise and direct. This is a business tool, not a chatbot.
