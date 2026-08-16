@@ -1152,58 +1152,7 @@ body{font-family:var(--sans);color:var(--ink);overflow:hidden;font-size:15px;lin
   <div class="h-footer">
     <div class="hf-l" id="footer-text"><strong>Velox</strong> · Aquarius Ndalo Holdings</div>
     <div class="hf-r">NDALO AGENTS v1 · 2026</div>
-      <div id="s-ingest-tab" style="display:none">
-      <div class="card" style="margin-bottom:14px;border-color:var(--gm);border-width:2px">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-          <div style="width:44px;height:44px;border-radius:10px;background:var(--g);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📥</div>
-          <div>
-            <div class="ct" style="margin-bottom:2px">Smart Document Ingestion</div>
-            <div style="font-size:13px;color:var(--gm2)">Upload emails, proposals, invoices, contracts, or bank statements. AI reads each document and populates the relevant tabs automatically.</div>
-          </div>
-        </div>
-        <div class="dz" id="ingest-dz" onclick="document.getElementById('ingest-file-input').click()" ondragover="event.preventDefault();document.getElementById('ingest-dz').classList.add('drag')" ondragleave="document.getElementById('ingest-dz').classList.remove('drag')" ondrop="handleIngestDrop(event)">
-          <div class="dz-icon">📄</div>
-          <div class="dz-title">Upload documents to analyse</div>
-          <div class="dz-sub">PDF, images (JPG/PNG), .txt, .eml — proposals, bank statements, invoices, contracts, demand letters</div>
-          <input type="file" id="ingest-file-input" accept=".pdf,.jpg,.jpeg,.png,.txt,.eml,.csv" multiple style="display:none" onchange="handleIngestFiles(event)">
-        </div>
-        <div id="ingest-queue" style="display:none;margin-top:12px">
-          <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--g);margin-bottom:8px">Documents Queued</div>
-          <div id="ingest-queue-list"></div>
-          <button class="btn p" style="width:100%;margin-top:10px" id="ingest-run-btn" onclick="runSmartIngest()">⚡ Analyse All &amp; Populate →</button>
-        </div>
-        <div id="ingest-progress" style="display:none;margin-top:12px">
-          <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--g);margin-bottom:8px">Processing...</div>
-          <div id="ingest-progress-bar" style="background:var(--bg2);border-radius:4px;height:6px;overflow:hidden"><div id="ingest-progress-fill" style="height:100%;background:var(--g);border-radius:4px;width:0%;transition:width 0.3s ease"></div></div>
-          <div id="ingest-progress-text" style="font-size:12px;color:var(--gm2);margin-top:6px">Reading documents...</div>
-        </div>
-        <div id="ingest-result" style="display:none;margin-top:14px"></div>
-      </div>
-      <div class="card" style="margin-bottom:14px">
-        <div class="ct">What can be auto-populated?</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div style="background:var(--bg2);border-radius:7px;padding:12px;border-left:3px solid var(--g)">
-            <div style="font-weight:600;font-size:13px;color:var(--ink);margin-bottom:4px">💳 Transactions</div>
-            <div style="font-size:12px;color:var(--gl2)">Bank statements (PDF or image), receipts — date, amount, description, direction</div>
-          </div>
-          <div style="background:var(--bg2);border-radius:7px;padding:12px;border-left:3px solid var(--amber)">
-            <div style="font-weight:600;font-size:13px;color:var(--ink);margin-bottom:4px">⚠️ Debt Register</div>
-            <div style="font-size:12px;color:var(--gl2)">Letters of demand, summons, account statements — creditor, amount owed, due date</div>
-          </div>
-          <div style="background:var(--bg2);border-radius:7px;padding:12px;border-left:3px solid #2980b9">
-            <div style="font-weight:600;font-size:13px;color:var(--ink);margin-bottom:4px">🔄 Pipeline</div>
-            <div style="font-size:12px;color:var(--gl2)">Emails, RFPs, quote requests — client, value, opportunity type, stage</div>
-          </div>
-          <div style="background:var(--bg2);border-radius:7px;padding:12px;border-left:3px solid var(--gl)">
-            <div style="font-weight:600;font-size:13px;color:var(--ink);margin-bottom:4px">💳 Invoices</div>
-            <div style="font-size:12px;color:var(--gl2)">Existing invoices — client, amount, due date, reference number</div>
-          </div>
-        </div>
-        <div style="background:var(--gp);border:1px solid var(--gm);border-radius:7px;padding:10px 13px;margin-top:10px;font-size:12px;color:var(--gm2)">
-          <strong style="color:var(--g)">Note:</strong> AI will show you a preview of what it found before writing anything. You confirm what gets saved.
-        </div>
-      </div>
-    </div>
+     
 
 </div>
 </div>
@@ -1649,296 +1598,360 @@ Online training session delivered" rows="5"></textarea></div>
     <div><div class="ph-title">Settings</div><div class="ph-sub">Ndalo Agents · Customise your app, businesses, storage, and team</div></div>
   </div>
   <div class="pb">
-    <div class="stabs">
-      <button class="stab active" id="st-app" onclick="setSettingsTab(&#39;app&#39;,this)">App &amp; Business</button>
-      <button class="stab" id="st-entities" onclick="setSettingsTab(&#39;entities&#39;,this)">Businesses</button>
-      <button class="stab" id="st-storage" onclick="setSettingsTab(&#39;storage&#39;,this)">Storage &amp; Team</button>
-      <button class="stab" id="st-data" onclick="setSettingsTab(&#39;data&#39;,this)">Data</button>
-      <button class="stab" id="st-ingest" onclick="setSettingsTab(&#39;ingest&#39;,this)">📥 Smart Ingest</button>
-    </div>
+      <div class="stabs">
+          <button class="stab active" id="st-app" onclick="setSettingsTab(&#39;app&#39;,this)">App &amp; Business</button>
+          <button class="stab" id="st-entities" onclick="setSettingsTab(&#39;entities&#39;,this)">Businesses</button>
+          <button class="stab" id="st-storage" onclick="setSettingsTab(&#39;storage&#39;,this)">Storage &amp; Team</button>
+          <button class="stab" id="st-data" onclick="setSettingsTab(&#39;data&#39;,this)">Data</button>
+          <button class="stab" id="st-ingest" onclick="setSettingsTab(&#39;ingest&#39;,this)">📥 Smart Ingest</button>
+      </div>
 
-    <div id="s-app-tab">
-      <div class="g2">
-        <div>
-          <div class="card" style="margin-bottom:12px">
-            <div class="ct">App Identity</div>
-            <div class="fl"><label>App Name</label><input type="text" id="app-cfg-appname" placeholder="Velox"></div>
-            <div class="fl"><label>Tagline</label><input type="text" id="app-cfg-tagline" placeholder="Velox"></div>
-            <div style="font-size:12px;color:var(--gl2);margin-top:-6px;margin-bottom:12px">Appears in the top bar and home screen.</div>
-          </div>
-
-          <!-- AI ENGINE CARD -->
-          <div class="card" style="margin-bottom:12px;border-color:rgba(37,79,41,0.25);border-width:2px">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-              <div style="width:36px;height:36px;background:var(--gp);border:1px solid var(--gm);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🤖</div>
+      <div id="s-app-tab">
+          <div class="g2">
               <div>
-                <div class="ct" style="margin-bottom:1px">AI Engine</div>
-                <div style="font-size:12px;color:var(--gm2)">Choose cloud (Anthropic) or offline (Ollama) for all AI features.</div>
-              </div>
-            </div>
+                  <div class="card" style="margin-bottom:12px">
+                      <div class="ct">App Identity</div>
+                      <div class="fl"><label>App Name</label><input type="text" id="app-cfg-appname" placeholder="Velox"></div>
+                      <div class="fl"><label>Tagline</label><input type="text" id="app-cfg-tagline" placeholder="Velox"></div>
+                      <div style="font-size:12px;color:var(--gl2);margin-top:-6px;margin-bottom:12px">Appears in the top bar and home screen.</div>
+                  </div>
 
-            <!-- Engine toggle -->
-            <div style="display:flex;gap:8px;margin-bottom:14px" id="ai-engine-toggle">
-              <button id="eng-btn-anthropic" class="btn p sm" style="flex:1" onclick="selectAiEngine('anthropic')">☁️ Anthropic (Cloud)</button>
-              <button id="eng-btn-ollama"    class="btn sm"   style="flex:1" onclick="selectAiEngine('ollama')">🖥️ Ollama (Offline)</button>
-            </div>
+                  <!-- AI ENGINE CARD -->
+                  <div class="card" style="margin-bottom:12px;border-color:rgba(37,79,41,0.25);border-width:2px">
+                      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+                          <div style="width:36px;height:36px;background:var(--gp);border:1px solid var(--gm);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🤖</div>
+                          <div>
+                              <div class="ct" style="margin-bottom:1px">AI Engine</div>
+                              <div style="font-size:12px;color:var(--gm2)">Choose cloud (Anthropic) or offline (Ollama) for all AI features.</div>
+                          </div>
+                      </div>
 
-            <!-- Anthropic panel -->
-            <div id="ai-panel-anthropic">
-              <div id="api-key-status" style="margin-bottom:10px"></div>
-              <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-                <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off"
-                  style="flex:1;font-family:var(--mono);font-size:12px;letter-spacing:0.5px"
-                  onkeydown="if(event.key===&#39;Enter&#39;) saveApiKey()">
-                <button class="btn p" onclick="saveApiKey()">Save</button>
-                <button class="btn" id="api-test-btn" onclick="testApiKey()">Test</button>
-              </div>
-              <div style="font-size:11px;color:var(--gl2);line-height:1.6">
-                Stored locally only — sent only to <strong>api.anthropic.com</strong>.
-                Get a key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--g)">console.anthropic.com</a>
-              </div>
-            </div>
+                      <!-- Engine toggle -->
+                      <div style="display:flex;gap:8px;margin-bottom:14px" id="ai-engine-toggle">
+                          <button id="eng-btn-anthropic" class="btn p sm" style="flex:1" onclick="selectAiEngine('anthropic')">☁️ Anthropic (Cloud)</button>
+                          <button id="eng-btn-ollama" class="btn sm" style="flex:1" onclick="selectAiEngine('ollama')">🖥️ Ollama (Offline)</button>
+                      </div>
 
-            <!-- Ollama panel -->
-            <div id="ai-panel-ollama" style="display:none">
-              <div id="ollama-status" style="margin-bottom:10px"></div>
-              <div class="f2" style="margin-bottom:8px">
-                <div class="fl" style="margin-bottom:0">
-                  <label>Ollama Base URL</label>
-                  <input type="text" id="ollama-url-input" placeholder="http://localhost:11434"
-                    style="font-family:var(--mono);font-size:12px">
-                </div>
-                <div class="fl" style="margin-bottom:0">
-                  <label>Model Name</label>
-                  <input type="text" id="ollama-model-input" placeholder="llama3.2"
-                    style="font-family:var(--mono);font-size:12px">
-                </div>
+                      <!-- Anthropic panel -->
+                      <div id="ai-panel-anthropic">
+                          <div id="api-key-status" style="margin-bottom:10px"></div>
+                          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+                              <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off"
+                                     style="flex:1;font-family:var(--mono);font-size:12px;letter-spacing:0.5px"
+                                     onkeydown="if(event.key===&#39;Enter&#39;) saveApiKey()">
+                              <button class="btn p" onclick="saveApiKey()">Save</button>
+                              <button class="btn" id="api-test-btn" onclick="testApiKey()">Test</button>
+                          </div>
+                          <div style="font-size:11px;color:var(--gl2);line-height:1.6">
+                              Stored locally only — sent only to <strong>api.anthropic.com</strong>.
+                              Get a key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--g)">console.anthropic.com</a>
+                          </div>
+                      </div>
+
+                      <!-- Ollama panel -->
+                      <div id="ai-panel-ollama" style="display:none">
+                          <div id="ollama-status" style="margin-bottom:10px"></div>
+                          <div class="f2" style="margin-bottom:8px">
+                              <div class="fl" style="margin-bottom:0">
+                                  <label>Ollama Base URL</label>
+                                  <input type="text" id="ollama-url-input" placeholder="http://localhost:11434"
+                                         style="font-family:var(--mono);font-size:12px">
+                              </div>
+                              <div class="fl" style="margin-bottom:0">
+                                  <label>Model Name</label>
+                                  <input type="text" id="ollama-model-input" placeholder="llama3.2"
+                                         style="font-family:var(--mono);font-size:12px">
+                              </div>
+                          </div>
+                          <div style="display:flex;gap:8px;margin-bottom:8px">
+                              <button class="btn p" style="flex:1" onclick="saveOllamaConfig()">Save Ollama Config</button>
+                              <button class="btn" id="ollama-test-btn" onclick="testOllama()">Test Connection</button>
+                          </div>
+                          <div style="font-size:11px;color:var(--gl2);line-height:1.7">
+                              Ollama must be running locally with CORS enabled.<br>
+                              Set <code style="font-family:var(--mono);background:var(--bg2);padding:1px 5px;border-radius:3px">OLLAMA_ORIGINS=*</code> before starting Ollama, or run:<br>
+                              <code style="font-family:var(--mono);background:var(--bg2);padding:1px 5px;border-radius:3px">OLLAMA_ORIGINS=* ollama serve</code><br>
+                              Popular models: <strong>llama3.2</strong>, <strong>mistral</strong>, <strong>gemma3</strong>, <strong>phi4</strong>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card">
+                      <div class="ct">Business Details</div>
+                      <div class="fl"><label>Business / Trading Name</label><input type="text" id="app-cfg-bizname" placeholder="e.g. Acme Advisory (Pty) Ltd"></div>
+                      <div class="fl"><label>Owner / Director Name</label><input type="text" id="app-cfg-owner" placeholder="e.g. Jane Smith"></div>
+                      <div class="fl"><label>Physical Address</label><input type="text" id="app-cfg-address" placeholder="e.g. 123 Main Street, Cape Town, 8001"></div>
+                      <div class="f2">
+                          <div class="fl"><label>Phone</label><input type="text" id="app-cfg-phone" placeholder="+27 xx xxx xxxx"></div>
+                          <div class="fl"><label>Email</label><input type="text" id="app-cfg-email" placeholder="hello@yourbusiness.co.za"></div>
+                      </div>
+                      <div class="f2">
+                          <div class="fl"><label>Website</label><input type="text" id="app-cfg-website" placeholder="www.yourbusiness.co.za"></div>
+                          <div class="fl"><label>VAT / Tax Number</label><input type="text" id="app-cfg-tax" placeholder="e.g. 4xxxxxxxxx"></div>
+                      </div>
+                      <div class="fl"><label>Company Reg Number</label><input type="text" id="app-cfg-reg" placeholder="e.g. 20xx/xxxxxx/07"></div>
+                  </div>
               </div>
-              <div style="display:flex;gap:8px;margin-bottom:8px">
-                <button class="btn p" style="flex:1" onclick="saveOllamaConfig()">Save Ollama Config</button>
-                <button class="btn" id="ollama-test-btn" onclick="testOllama()">Test Connection</button>
-              </div>
-              <div style="font-size:11px;color:var(--gl2);line-height:1.7">
-                Ollama must be running locally with CORS enabled.<br>
-                Set <code style="font-family:var(--mono);background:var(--bg2);padding:1px 5px;border-radius:3px">OLLAMA_ORIGINS=*</code> before starting Ollama, or run:<br>
-                <code style="font-family:var(--mono);background:var(--bg2);padding:1px 5px;border-radius:3px">OLLAMA_ORIGINS=* ollama serve</code><br>
-                Popular models: <strong>llama3.2</strong>, <strong>mistral</strong>, <strong>gemma3</strong>, <strong>phi4</strong>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="ct">Business Details</div>
-            <div class="fl"><label>Business / Trading Name</label><input type="text" id="app-cfg-bizname" placeholder="e.g. Acme Advisory (Pty) Ltd"></div>
-            <div class="fl"><label>Owner / Director Name</label><input type="text" id="app-cfg-owner" placeholder="e.g. Jane Smith"></div>
-            <div class="fl"><label>Physical Address</label><input type="text" id="app-cfg-address" placeholder="e.g. 123 Main Street, Cape Town, 8001"></div>
-            <div class="f2">
-              <div class="fl"><label>Phone</label><input type="text" id="app-cfg-phone" placeholder="+27 xx xxx xxxx"></div>
-              <div class="fl"><label>Email</label><input type="text" id="app-cfg-email" placeholder="hello@yourbusiness.co.za"></div>
-            </div>
-            <div class="f2">
-              <div class="fl"><label>Website</label><input type="text" id="app-cfg-website" placeholder="www.yourbusiness.co.za"></div>
-              <div class="fl"><label>VAT / Tax Number</label><input type="text" id="app-cfg-tax" placeholder="e.g. 4xxxxxxxxx"></div>
-            </div>
-            <div class="fl"><label>Company Reg Number</label><input type="text" id="app-cfg-reg" placeholder="e.g. 20xx/xxxxxx/07"></div>
-          </div>
-        </div>
-        <div>
-          <div class="card" style="margin-bottom:12px">
-            <div class="ct">Team Members</div>
-            <div class="fl"><label>Names (one per line)</label><textarea id="app-cfg-team" rows="5" placeholder="Jane Smith
+              <div>
+                  <div class="card" style="margin-bottom:12px">
+                      <div class="ct">Team Members</div>
+                      <div class="fl">
+                          <label>Names (one per line)</label><textarea id="app-cfg-team" rows="5" placeholder="Jane Smith
 Sipho Mokoena
-Thandi Nkosi"></textarea></div>
-            <div style="font-size:12px;color:var(--gl2);margin-bottom:12px">Anyone who uses this system.</div>
+Thandi Nkosi"></textarea>
+                      </div>
+                      <div style="font-size:12px;color:var(--gl2);margin-bottom:12px">Anyone who uses this system.</div>
+                  </div>
+                  <button class="btn p btn-lg" style="width:100%" onclick="saveAppConfig()">Save App Settings</button>
+              </div>
           </div>
-          <button class="btn p btn-lg" style="width:100%" onclick="saveAppConfig()">Save App Settings</button>
-        </div>
       </div>
-    </div>
 
-    <div id="s-entities-tab" style="display:none">
-      <!-- ENTITY REGISTER TABLE -->
-      <div class="card" style="margin-bottom:14px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <div class="ct" style="margin-bottom:0">Business Register</div>
-          <div style="display:flex;gap:7px;align-items:center">
-            <input type="text" id="entity-search" placeholder="Search businesses..." oninput="renderEntityRegister()" style="background:var(--bg2);border:1px solid var(--rule);border-radius:7px;color:var(--ink);font-family:var(--sans);font-size:13px;padding:7px 12px;outline:none;width:180px">
-            <button class="btn sm s" onclick="addNewEntity()">+ Add Business</button>
+      <div id="s-entities-tab" style="display:none">
+          <!-- ENTITY REGISTER TABLE -->
+          <div class="card" style="margin-bottom:14px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                  <div class="ct" style="margin-bottom:0">Business Register</div>
+                  <div style="display:flex;gap:7px;align-items:center">
+                      <input type="text" id="entity-search" placeholder="Search businesses..." oninput="renderEntityRegister()" style="background:var(--bg2);border:1px solid var(--rule);border-radius:7px;color:var(--ink);font-family:var(--sans);font-size:13px;padding:7px 12px;outline:none;width:180px">
+                      <button class="btn sm s" onclick="addNewEntity()">+ Add Business</button>
+                  </div>
+              </div>
+              <div class="tw">
+                  <table class="tbl" id="entity-register-table">
+                      <thead>
+                          <tr>
+                              <th>Business Name</th>
+                              <th>Type</th>
+                              <th>Status</th>
+                              <th>Created</th>
+                              <th>Updated</th>
+                              <th class="r">Actions</th>
+                          </tr>
+                      </thead>
+                      <tbody id="entity-register-body"></tbody>
+                  </table>
+              </div>
           </div>
-        </div>
-        <div class="tw">
-          <table class="tbl" id="entity-register-table">
-            <thead><tr>
-              <th>Business Name</th><th>Type</th><th>Status</th>
-              <th>Created</th><th>Updated</th><th class="r">Actions</th>
-            </tr></thead>
-            <tbody id="entity-register-body"></tbody>
-          </table>
-        </div>
-      </div>
-      <!-- ENTITY EDIT FORM -->
-      <div class="g2">
-        <div>
-          <div class="card" style="margin-bottom:12px">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-              <div class="ct" style="margin-bottom:0">Edit Business</div>
-              <div style="display:flex;gap:6px">
-                <button class="btn sm d" onclick="removeEntity()">Archive</button>
-              </div>
-            </div>
-            <select id="settings-entity-sel" onchange="loadEntitySettings(this.value)" style="width:100%;background:var(--bg2);border:1px solid var(--rule);border-radius:7px;color:var(--ink);font-family:var(--sans);font-size:15px;padding:10px 13px;outline:none;margin-bottom:12px"><option value="entity_1" selected="">New Entity</option><option value="entity_2">Unnamed Entity</option><option value="entity_3">Unnamed Entity</option><option value="entity_4">Unnamed Entity</option><option value="entity_5">Unnamed Entity</option><option value="entity_6">Unnamed Entity</option></select>
-            <div style="font-size:12px;color:var(--gl2);margin-bottom:14px">Configure the full profile for this business. It will appear in the sidebar and on all proposals and invoices once saved.</div>
-            <div style="margin-bottom:14px">
-              <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--g);margin-bottom:6px">Quick-Fill from Document</div>
-              <div class="dz" style="padding:14px" onclick="document.getElementById('entity-doc-file').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleEntityDocDrop(event)">
-                <div style="font-size:18px;margin-bottom:4px">📄</div>
-                <div style="font-size:13px;font-weight:600;color:var(--gm2)">Upload business documents to auto-fill</div>
-                <div style="font-size:12px;color:var(--gl2)">Registration docs, CIPC certificates, NPC letters, partnership agreements</div>
-                <input type="file" id="entity-doc-file" accept=".pdf,.jpg,.jpeg,.png,.txt" style="display:none" onchange="handleEntityDocFile(event)">
-              </div>
-              <div id="entity-doc-result" style="display:none;margin-top:8px"></div>
-            </div>
-            <div class="fl"><label>Business Full Name</label><input type="text" id="se-fullname" placeholder="e.g. Acme Advisory (Pty) Ltd"></div>
-            <div class="fl"><label>Short Name (sidebar)</label><input type="text" id="se-short" placeholder="e.g. Acme Advisory"></div>
-            <div class="f2">
-            <div class="fl"><label>Business Type</label>
-              <select id="se-type">
-                <option value="company">Trading Company</option>
-                <option value="holding">Holding / Investment</option>
-                <option value="npc">Non-Profit (NPC)</option>
-                <option value="personal">Personal Brand</option>
-                <option value="partnership">Partnership / JV</option>
-              </select>
-            </div>
-            <div class="fl"><label>Status</label>
-              <select id="se-status">
-                <option value="active">Active</option>
-                <option value="draft">Draft</option>
-                <option value="suspended">Suspended</option>
-                <option value="archived">Archived</option>
-              </select>
-            </div>
-            </div>
-            <div class="fl"><label>Registration / Accreditation</label><input type="text" id="se-reg" placeholder="e.g. Reg No: 20xx/xxxxxx/07"></div>
-            <div class="fl"><label>Contact Person &amp; Title</label><input type="text" id="se-contact" placeholder="e.g. Jane Smith · Director"></div>
-            <div class="fl"><label>Address</label><input type="text" id="se-addr" placeholder="e.g. Cape Town, South Africa"></div>
-            <div class="fl"><label>Notes</label><input type="text" id="se-notes" placeholder="e.g. Currently dormant, QCTO accredited, etc."></div>
-            <div class="fl"><label>Brand Colour</label>
-              <div style="display:flex;gap:8px;align-items:center">
-                <input type="color" id="se-color" value="#0F2044" style="width:44px;height:38px;border:1px solid var(--rule);border-radius:6px;padding:2px;cursor:pointer;background:var(--bg2)" oninput="document.getElementById(&#39;se-color-hex&#39;).value=this.value">
-                <input type="text" id="se-color-hex" placeholder="#0F2044" style="flex:1;background:var(--bg2);border:1px solid var(--rule);border-radius:7px;color:var(--ink);font-family:var(--mono);font-size:14px;padding:9px 12px;outline:none" oninput="document.getElementById(&#39;se-color&#39;).value=this.value">
-              </div>
-            </div>
-            <!-- HOLDING COMPANY FIELDS -->
-            <div style="background:var(--gp);border:1px solid var(--gm);border-radius:8px;padding:14px;margin-top:6px;margin-bottom:6px">
-              <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--g);margin-bottom:10px">Holding / Investment Structure</div>
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-                <input type="checkbox" id="se-holding" style="width:18px;height:18px;accent-color:var(--g)" onchange="toggleHoldingFields()">
-                <label for="se-holding" style="font-size:14px;color:var(--ink);cursor:pointer;font-weight:500">This is the Holding / Investment Company</label>
-              </div>
-              <div id="se-holding-note" style="display:none;font-size:12px;color:var(--g);margin-bottom:10px">✓ This business will receive consolidated income from all subsidiaries that transfer to it. Only one business can be the holding company.</div>
-              <div class="fl" id="se-transfers-to-wrap">
-                <label>Transfers Income To (Holding Company)</label>
-                <select id="se-transfers-to" style="width:100%;background:var(--bg2);border:1px solid var(--rule);border-radius:7px;color:var(--ink);font-family:var(--sans);font-size:14px;padding:9px 12px;outline:none"><option value="">— Does not transfer upward —</option></select>
-                <div style="font-size:12px;color:var(--gl2);margin-top:4px">Select the holding company this business transfers income to. Leave blank if this business is independent.</div>
-              </div>
-              <div class="fl" id="se-transfer-pct-wrap" style="margin-bottom:0">
-                <label>Target Transfer % of Income</label>
-                <input type="number" id="se-transfer-pct" min="0" max="100" step="1" placeholder="e.g. 20" style="width:100%;background:var(--bg2);border:1px solid var(--rule);border-radius:7px;color:var(--ink);font-family:var(--sans);font-size:14px;padding:9px 12px;outline:none">
-                <div style="font-size:12px;color:var(--gl2);margin-top:4px">What % of this business's income should be transferred upward. Compared against what's actually transferred in the Holding Company Rollup view.</div>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-              <input type="checkbox" id="se-vat" style="width:18px;height:18px;accent-color:var(--g)">
-              <label for="se-vat" style="font-size:14px;color:var(--ink);cursor:pointer">VAT Registered</label>
-            </div>
-            <div class="fl"><label>VAT Number</label><input type="text" id="se-vatnum" placeholder="e.g. 4xxxxxxxxx"></div>
+          <!-- ENTITY EDIT FORM -->
+          <div class="g2">
+              <div>
+                  <div class="card" style="margin-bottom:12px">
+                      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                          <div class="ct" style="margin-bottom:0">Edit Business</div>
+                          <div style="display:flex;gap:6px">
+                              <button class="btn sm d" onclick="removeEntity()">Archive</button>
+                          </div>
+                      </div>
+                      <select id="settings-entity-sel" onchange="loadEntitySettings(this.value)" style="width:100%;background:var(--bg2);border:1px solid var(--rule);border-radius:7px;color:var(--ink);font-family:var(--sans);font-size:15px;padding:10px 13px;outline:none;margin-bottom:12px"><option value="entity_1" selected="">New Entity</option><option value="entity_2">Unnamed Entity</option><option value="entity_3">Unnamed Entity</option><option value="entity_4">Unnamed Entity</option><option value="entity_5">Unnamed Entity</option><option value="entity_6">Unnamed Entity</option></select>
+                      <div style="font-size:12px;color:var(--gl2);margin-bottom:14px">Configure the full profile for this business. It will appear in the sidebar and on all proposals and invoices once saved.</div>
+                      <div style="margin-bottom:14px">
+                          <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--g);margin-bottom:6px">Quick-Fill from Document</div>
+                          <div class="dz" style="padding:14px" onclick="document.getElementById('entity-doc-file').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleEntityDocDrop(event)">
+                              <div style="font-size:18px;margin-bottom:4px">📄</div>
+                              <div style="font-size:13px;font-weight:600;color:var(--gm2)">Upload business documents to auto-fill</div>
+                              <div style="font-size:12px;color:var(--gl2)">Registration docs, CIPC certificates, NPC letters, partnership agreements</div>
+                              <input type="file" id="entity-doc-file" accept=".pdf,.jpg,.jpeg,.png,.txt" style="display:none" onchange="handleEntityDocFile(event)">
+                          </div>
+                          <div id="entity-doc-result" style="display:none;margin-top:8px"></div>
+                      </div>
+                      <div class="fl"><label>Business Full Name</label><input type="text" id="se-fullname" placeholder="e.g. Acme Advisory (Pty) Ltd"></div>
+                      <div class="fl"><label>Short Name (sidebar)</label><input type="text" id="se-short" placeholder="e.g. Acme Advisory"></div>
+                      <div class="f2">
+                          <div class="fl">
+                              <label>Business Type</label>
+                              <select id="se-type">
+                                  <option value="company">Trading Company</option>
+                                  <option value="holding">Holding / Investment</option>
+                                  <option value="npc">Non-Profit (NPC)</option>
+                                  <option value="personal">Personal Brand</option>
+                                  <option value="partnership">Partnership / JV</option>
+                              </select>
+                          </div>
+                          <div class="fl">
+                              <label>Status</label>
+                              <select id="se-status">
+                                  <option value="active">Active</option>
+                                  <option value="draft">Draft</option>
+                                  <option value="suspended">Suspended</option>
+                                  <option value="archived">Archived</option>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="fl"><label>Registration / Accreditation</label><input type="text" id="se-reg" placeholder="e.g. Reg No: 20xx/xxxxxx/07"></div>
+                      <div class="fl"><label>Contact Person &amp; Title</label><input type="text" id="se-contact" placeholder="e.g. Jane Smith · Director"></div>
+                      <div class="fl"><label>Address</label><input type="text" id="se-addr" placeholder="e.g. Cape Town, South Africa"></div>
+                      <div class="fl"><label>Notes</label><input type="text" id="se-notes" placeholder="e.g. Currently dormant, QCTO accredited, etc."></div>
+                      <div class="fl">
+                          <label>Brand Colour</label>
+                          <div style="display:flex;gap:8px;align-items:center">
+                              <input type="color" id="se-color" value="#0F2044" style="width:44px;height:38px;border:1px solid var(--rule);border-radius:6px;padding:2px;cursor:pointer;background:var(--bg2)" oninput="document.getElementById(&#39;se-color-hex&#39;).value=this.value">
+                              <input type="text" id="se-color-hex" placeholder="#0F2044" style="flex:1;background:var(--bg2);border:1px solid var(--rule);border-radius:7px;color:var(--ink);font-family:var(--mono);font-size:14px;padding:9px 12px;outline:none" oninput="document.getElementById(&#39;se-color&#39;).value=this.value">
+                          </div>
+                      </div>
+                      <!-- HOLDING COMPANY FIELDS -->
+                      <div style="background:var(--gp);border:1px solid var(--gm);border-radius:8px;padding:14px;margin-top:6px;margin-bottom:6px">
+                          <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--g);margin-bottom:10px">Holding / Investment Structure</div>
+                          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                              <input type="checkbox" id="se-holding" style="width:18px;height:18px;accent-color:var(--g)" onchange="toggleHoldingFields()">
+                              <label for="se-holding" style="font-size:14px;color:var(--ink);cursor:pointer;font-weight:500">This is the Holding / Investment Company</label>
+                          </div>
+                          <div id="se-holding-note" style="display:none;font-size:12px;color:var(--g);margin-bottom:10px">✓ This business will receive consolidated income from all subsidiaries that transfer to it. Only one business can be the holding company.</div>
+                          <div class="fl" id="se-transfers-to-wrap">
+                              <label>Transfers Income To (Holding Company)</label>
+                              <select id="se-transfers-to" style="width:100%;background:var(--bg2);border:1px solid var(--rule);border-radius:7px;color:var(--ink);font-family:var(--sans);font-size:14px;padding:9px 12px;outline:none"><option value="">— Does not transfer upward —</option></select>
+                              <div style="font-size:12px;color:var(--gl2);margin-top:4px">Select the holding company this business transfers income to. Leave blank if this business is independent.</div>
+                          </div>
+                          <div class="fl" id="se-transfer-pct-wrap" style="margin-bottom:0">
+                              <label>Target Transfer % of Income</label>
+                              <input type="number" id="se-transfer-pct" min="0" max="100" step="1" placeholder="e.g. 20" style="width:100%;background:var(--bg2);border:1px solid var(--rule);border-radius:7px;color:var(--ink);font-family:var(--sans);font-size:14px;padding:9px 12px;outline:none">
+                              <div style="font-size:12px;color:var(--gl2);margin-top:4px">What % of this business's income should be transferred upward. Compared against what's actually transferred in the Holding Company Rollup view.</div>
+                          </div>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                          <input type="checkbox" id="se-vat" style="width:18px;height:18px;accent-color:var(--g)">
+                          <label for="se-vat" style="font-size:14px;color:var(--ink);cursor:pointer">VAT Registered</label>
+                      </div>
+                      <div class="fl"><label>VAT Number</label><input type="text" id="se-vatnum" placeholder="e.g. 4xxxxxxxxx"></div>
 
-          </div>
-          <div class="card">
-            <div class="ct">Logo</div>
-            <div id="se-logo-preview" style="width:80px;height:80px;border:1px solid var(--rule);border-radius:8px;background:var(--bg2);display:flex;align-items:center;justify-content:center;margin-bottom:10px;overflow:hidden"><span style="font-size:13px;font-weight:700;color:#0F2044">NE</span></div>
-            <div style="display:flex;gap:8px">
-              <label class="btn s" style="cursor:pointer">Upload Logo<input type="file" accept="image/*" style="display:none" onchange="uploadEntityLogo(this)"></label>
-              <button class="btn d" onclick="removeEntityLogo()">Remove</button>
-            </div>
-            <div style="font-size:12px;color:var(--gl2);margin-top:8px">PNG transparent background preferred.</div>
-          </div>
-        </div>
-        <div>
-          <div class="card" style="margin-bottom:12px">
-            <div class="ct">Banking Details</div>
-            <div class="fl"><label>Bank Name</label><input type="text" id="se-bank" placeholder="e.g. First National Bank (FNB)"></div>
-            <div class="fl"><label>Account Name</label><input type="text" id="se-accname" placeholder="e.g. Your Business (Pty) Ltd"></div>
-            <div class="fl"><label>Account Number</label><input type="text" id="se-accno" placeholder="e.g. 62xxxxxxxxx"></div>
-            <div class="fl"><label>Branch Code</label><input type="text" id="se-branch" placeholder="e.g. 250655"></div>
-            <div class="fl"><label>Account Type</label>
-              <select id="se-acctype"><option>Cheque / Current</option><option>Business Current</option><option>Savings</option></select>
-            </div>
-          </div>
-          <button class="btn p btn-lg" style="width:100%" onclick="saveEntitySettings()">Save Business Details</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="s-storage-tab" style="display:none">
-      <div class="g2">
-        <div>
-          <div class="card">
-            <div class="ct">Storage Folder</div>
-            <div id="drive-status-card" style="margin-bottom:16px">
-              <div style="display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg2);border-radius:8px;border:1px solid var(--rule)">
-                <div id="drive-indicator" style="width:11px;height:11px;border-radius:50%;background:var(--amber);flex-shrink:0"></div>
-                <div style="flex:1">
-                  <div style="font-size:14px;font-weight:600;color:var(--ink)" id="drive-status-text">No folder connected</div>
-                  <div style="font-size:12px;color:var(--gl2);margin-top:2px" id="drive-status-sub">Data saved in browser only</div>
-                </div>
-                <button class="btn p" id="drive-connect-btn" onclick="syncNow()">Connect a Folder</button>
-                <button class="btn" id="drive-disconnect-btn" onclick="disconnectFolder()" style="display:none;color:var(--gm2)">Disconnect</button>
+                  </div>
+                  <div class="card">
+                      <div class="ct">Logo</div>
+                      <div id="se-logo-preview" style="width:80px;height:80px;border:1px solid var(--rule);border-radius:8px;background:var(--bg2);display:flex;align-items:center;justify-content:center;margin-bottom:10px;overflow:hidden"><span style="font-size:13px;font-weight:700;color:#0F2044">NE</span></div>
+                      <div style="display:flex;gap:8px">
+                          <label class="btn s" style="cursor:pointer">Upload Logo<input type="file" accept="image/*" style="display:none" onchange="uploadEntityLogo(this)"></label>
+                          <button class="btn d" onclick="removeEntityLogo()">Remove</button>
+                      </div>
+                      <div style="font-size:12px;color:var(--gl2);margin-top:8px">PNG transparent background preferred.</div>
+                  </div>
               </div>
-            </div>
-            <div style="font-size:13px;color:var(--gm2);line-height:1.7;margin-bottom:12px">Select any folder on your computer — Google Drive, Dropbox, OneDrive, USB. The app writes <code style="background:var(--bg2);padding:1px 5px;border-radius:4px;font-family:var(--mono)">velox-data.json</code> directly into it. Your sync service handles the cloud.</div>
-            <div style="background:var(--gp);border-left:3px solid var(--g);padding:11px 13px;border-radius:0 7px 7px 0;margin-bottom:12px;font-size:13px;color:var(--gm2);line-height:1.6"><strong style="color:var(--g)">Team sharing:</strong> Point to a shared folder. Each team member connects their own browser to the same folder.</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn" onclick="loadFromFile()">📂 Load from File</button>
-              <button class="btn" onclick="exportData()">⬇ Export Backup</button>
-            </div>
+              <div>
+                  <div class="card" style="margin-bottom:12px">
+                      <div class="ct">Banking Details</div>
+                      <div class="fl"><label>Bank Name</label><input type="text" id="se-bank" placeholder="e.g. First National Bank (FNB)"></div>
+                      <div class="fl"><label>Account Name</label><input type="text" id="se-accname" placeholder="e.g. Your Business (Pty) Ltd"></div>
+                      <div class="fl"><label>Account Number</label><input type="text" id="se-accno" placeholder="e.g. 62xxxxxxxxx"></div>
+                      <div class="fl"><label>Branch Code</label><input type="text" id="se-branch" placeholder="e.g. 250655"></div>
+                      <div class="fl">
+                          <label>Account Type</label>
+                          <select id="se-acctype"><option>Cheque / Current</option><option>Business Current</option><option>Savings</option></select>
+                      </div>
+                  </div>
+                  <button class="btn p btn-lg" style="width:100%" onclick="saveEntitySettings()">Save Business Details</button>
+              </div>
           </div>
-        </div>
-        <div>
-          <div class="card">
-            <div class="ct">Business Logo Overview</div>
-            <div id="logo-upload-list"></div>
-          </div>
-        </div>
       </div>
-    </div>
 
-    <div id="s-data-tab" style="display:none">
-      <div class="g2">
-        <div>
-          <div class="card" style="margin-bottom:12px">
-            <div class="ct">Export / Import</div>
-            <div style="font-size:13px;color:var(--gm2);margin-bottom:14px">Download a full backup or restore from a previous one.</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn p" onclick="exportData()">⬇ Export Backup (.json)</button>
-              <button class="btn" onclick="document.getElementById(&#39;import-backup&#39;).click()">⬆ Import Backup</button>
-              <input type="file" id="import-backup" accept=".json" style="display:none" onchange="importData(event)">
-            </div>
+      <div id="s-storage-tab" style="display:none">
+          <div class="g2">
+              <div>
+                  <div class="card">
+                      <div class="ct">Storage Folder</div>
+                      <div id="drive-status-card" style="margin-bottom:16px">
+                          <div style="display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg2);border-radius:8px;border:1px solid var(--rule)">
+                              <div id="drive-indicator" style="width:11px;height:11px;border-radius:50%;background:var(--amber);flex-shrink:0"></div>
+                              <div style="flex:1">
+                                  <div style="font-size:14px;font-weight:600;color:var(--ink)" id="drive-status-text">No folder connected</div>
+                                  <div style="font-size:12px;color:var(--gl2);margin-top:2px" id="drive-status-sub">Data saved in browser only</div>
+                              </div>
+                              <button class="btn p" id="drive-connect-btn" onclick="syncNow()">Connect a Folder</button>
+                              <button class="btn" id="drive-disconnect-btn" onclick="disconnectFolder()" style="display:none;color:var(--gm2)">Disconnect</button>
+                          </div>
+                      </div>
+                      <div style="font-size:13px;color:var(--gm2);line-height:1.7;margin-bottom:12px">Select any folder on your computer — Google Drive, Dropbox, OneDrive, USB. The app writes <code style="background:var(--bg2);padding:1px 5px;border-radius:4px;font-family:var(--mono)">velox-data.json</code> directly into it. Your sync service handles the cloud.</div>
+                      <div style="background:var(--gp);border-left:3px solid var(--g);padding:11px 13px;border-radius:0 7px 7px 0;margin-bottom:12px;font-size:13px;color:var(--gm2);line-height:1.6"><strong style="color:var(--g)">Team sharing:</strong> Point to a shared folder. Each team member connects their own browser to the same folder.</div>
+                      <div style="display:flex;gap:8px;flex-wrap:wrap">
+                          <button class="btn" onclick="loadFromFile()">📂 Load from File</button>
+                          <button class="btn" onclick="exportData()">⬇ Export Backup</button>
+                      </div>
+                  </div>
+              </div>
+              <div>
+                  <div class="card">
+                      <div class="ct">Business Logo Overview</div>
+                      <div id="logo-upload-list"></div>
+                  </div>
+              </div>
           </div>
-          <div class="card">
-            <div class="ct" style="color:var(--red)">Danger Zone</div>
-            <div style="font-size:13px;color:var(--gm2);margin-bottom:14px;line-height:1.65">Reset everything — proposals, pipeline, invoices, transactions, debts — and start completely fresh. A backup will be offered first.</div>
-            <button class="btn" onclick="confirmReset()" style="border-color:var(--red);color:var(--red);font-weight:600">🗑 Reset All Data</button>
-          </div>
-        </div>
-        <div>
-          <div class="card">
-            <div class="ct">About Velox</div>
-            <div style="font-size:13px;color:var(--gm2);line-height:1.8"><strong style="color:var(--ink)">Velox v1</strong> — Velox.<br><br>A single-file business operating system for SMEs and sole practitioners. Proposals, pipeline, billing, and financials — all working together.<br><br><strong style="color:var(--ink)">Your data stays yours.</strong> No servers. No subscriptions. Your data lives in a file on your own machine or cloud folder.<br><br><strong style="color:var(--ink)">Built on:</strong> HTML · CSS · JavaScript · Claude AI</div>
-          </div>
-        </div>
       </div>
-    </div>
+
+      <div id="s-data-tab" style="display:none">
+          <div class="g2">
+              <div>
+                  <div class="card" style="margin-bottom:12px">
+                      <div class="ct">Export / Import</div>
+                      <div style="font-size:13px;color:var(--gm2);margin-bottom:14px">Download a full backup or restore from a previous one.</div>
+                      <div style="display:flex;gap:8px;flex-wrap:wrap">
+                          <button class="btn p" onclick="exportData()">⬇ Export Backup (.json)</button>
+                          <button class="btn" onclick="document.getElementById(&#39;import-backup&#39;).click()">⬆ Import Backup</button>
+                          <input type="file" id="import-backup" accept=".json" style="display:none" onchange="importData(event)">
+                      </div>
+                  </div>
+                  <div class="card">
+                      <div class="ct" style="color:var(--red)">Danger Zone</div>
+                      <div style="font-size:13px;color:var(--gm2);margin-bottom:14px;line-height:1.65">Reset everything — proposals, pipeline, invoices, transactions, debts — and start completely fresh. A backup will be offered first.</div>
+                      <button class="btn" onclick="confirmReset()" style="border-color:var(--red);color:var(--red);font-weight:600">🗑 Reset All Data</button>
+                  </div>
+              </div>
+              <div>
+                  <div class="card">
+                      <div class="ct">About Velox</div>
+                      <div style="font-size:13px;color:var(--gm2);line-height:1.8"><strong style="color:var(--ink)">Velox v1</strong> — Velox.<br><br>A single-file business operating system for SMEs and sole practitioners. Proposals, pipeline, billing, and financials — all working together.<br><br><strong style="color:var(--ink)">Your data stays yours.</strong> No servers. No subscriptions. Your data lives in a file on your own machine or cloud folder.<br><br><strong style="color:var(--ink)">Built on:</strong> HTML · CSS · JavaScript · Claude AI</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div id="s-ingest-tab" style="display:none">
+          <div class="card" style="margin-bottom:14px;border-color:var(--gm);border-width:2px">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+                  <div style="width:44px;height:44px;border-radius:10px;background:var(--g);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0"> </div>
+                  <div>
+                      <div class="ct" style="margin-bottom:2px">Smart Document Ingestion</div>
+                      <div style="font-size:13px;color:var(--gm2)">Upload emails, proposals, invoices, contracts, or bank statements. AI reads each document and populates the relevant tabs automatically.</div>
+                  </div>
+              </div>
+              <div class="dz" id="ingest-dz" onclick="document.getElementById('ingest-file-input').click()" ondragover="event.preventDefault();document.getElementById('ingest-dz').classList.add('drag')" ondragleave="document.getElementById('ingest-dz').classList.remove('drag')" ondrop="handleIngestDrop(event)">
+                  <div class="dz-icon"> </div>
+                  <div class="dz-title">Upload documents to analyse</div>
+                  <div class="dz-sub">PDF, images (JPG/PNG), .txt, .eml — proposals, bank statements, invoices, contracts, demand letters</div>
+                  <input type="file" id="ingest-file-input" accept=".pdf,.jpg,.jpeg,.png,.txt,.eml,.csv" multiple style="display:none" onchange="handleIngestFiles(event)">
+              </div>
+              <div id="ingest-queue" style="display:none;margin-top:12px">
+                  <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--g);margin-bottom:8px">Documents Queued</div>
+                  <div id="ingest-queue-list"></div>
+                  <button class="btn p" style="width:100%;margin-top:10px" id="ingest-run-btn" onclick="runSmartIngest()"> Analyse All &amp; Populate →</button>
+              </div>
+              <div id="ingest-progress" style="display:none;margin-top:12px">
+                  <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--g);margin-bottom:8px">Processing...</div>
+                  <div id="ingest-progress-bar" style="background:var(--bg2);border-radius:4px;height:6px;overflow:hidden"><div id="ingest-progress-fill" style="height:100%;background:var(--g);border-radius:4px;width:0%;transition:width 0.3s ease"></div></div>
+                  <div id="ingest-progress-text" style="font-size:12px;color:var(--gm2);margin-top:6px">Reading documents...</div>
+              </div>
+              <div id="ingest-result" style="display:none;margin-top:14px"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px">
+              <div class="ct">What can be auto-populated?</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                  <div style="background:var(--bg2);border-radius:7px;padding:12px;border-left:3px solid var(--g)">
+                      <div style="font-weight:600;font-size:13px;color:var(--ink);margin-bottom:4px"> Transactions</div>
+                      <div style="font-size:12px;color:var(--gl2)">Bank statements (PDF or image), receipts — date, amount, description, direction</div>
+                  </div>
+                  <div style="background:var(--bg2);border-radius:7px;padding:12px;border-left:3px solid var(--amber)">
+                      <div style="font-weight:600;font-size:13px;color:var(--ink);margin-bottom:4px"> Debt Register</div>
+                      <div style="font-size:12px;color:var(--gl2)">Letters of demand, summons, account statements — creditor, amount owed, due date</div>
+                  </div>
+                  <div style="background:var(--bg2);border-radius:7px;padding:12px;border-left:3px solid #2980b9">
+                      <div style="font-weight:600;font-size:13px;color:var(--ink);margin-bottom:4px"> Pipeline</div>
+                      <div style="font-size:12px;color:var(--gl2)">Emails, RFPs, quote requests — client, value, opportunity type, stage</div>
+                  </div>
+                  <div style="background:var(--bg2);border-radius:7px;padding:12px;border-left:3px solid var(--gl)">
+                      <div style="font-weight:600;font-size:13px;color:var(--ink);margin-bottom:4px"> Invoices</div>
+                      <div style="font-size:12px;color:var(--gl2)">Existing invoices — client, amount, due date, reference number</div>
+                  </div>
+              </div>
+              <div style="background:var(--gp);border:1px solid var(--gm);border-radius:7px;padding:10px 13px;margin-top:10px;font-size:12px;color:var(--gm2)">
+                  <strong style="color:var(--g)">Note:</strong> AI will show you a preview of what it found before writing anything. You confirm what gets saved.
+              </div>
+          </div>
+      </div>
   </div>
 </div>
 
