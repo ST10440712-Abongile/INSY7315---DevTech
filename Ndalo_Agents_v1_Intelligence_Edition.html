@@ -8406,7 +8406,7 @@ function agSystemPrompt() {
   const debtTot    = DB.debts.reduce((s,d)=>s+d.balance,0);
   const pipeV      = DB.deals.filter(d=>!['done','lost'].includes(d.stage)).reduce((s,d)=>s+d.value,0);
   const sarsDebt   = DB.debts.filter(d=>d.priority==='critical').reduce((s,d)=>s+d.balance,0);
-
+  const ingestContext = window._ingestResults || null;
   return `You are Ndalo Agent — the AI business intelligence and automation layer inside Ndalo Agents. You are a trusted, sharp, South African business advisor who speaks plainly and acts decisively. You serve as the operational backbone that removes administrative burden from the owner.
 
 BUSINESS CONTEXT:
@@ -8416,7 +8416,26 @@ BUSINESS CONTEXT:
 - Outstanding invoices: R${outstanding.toLocaleString()} across ${activeInv.length} invoices
 - Total debt: R${debtTot.toLocaleString()} | SARS (critical): R${sarsDebt.toLocaleString()}
 - Open pipeline: R${pipeV.toLocaleString()} across ${DB.deals.filter(d=>!['done','lost'].includes(d.stage)).length} deals
-- Contacts: ${(DB.contacts||[]).length} | Proposals saved: ${DB.proposals.length}
+- Contacts: ${(DB.contacts || []).length} | Proposals saved: ${DB.proposals.length}
+${ingestContext ? `
+SMART INGEST CONTEXT:
+The user has recently processed document(s) using Smart Ingest.
+
+Extracted transactions:
+${JSON.stringify(ingestContext.transactions || [])}
+
+Extracted debts:
+${JSON.stringify(ingestContext.debts || [])}
+
+Extracted deals:
+${JSON.stringify(ingestContext.deals || [])}
+
+Extracted invoices:
+${JSON.stringify(ingestContext.invoices || [])}
+
+Important notes:
+${JSON.stringify(ingestContext.notes || [])}
+` : ''}
 
 BEHAVIOUR RULES:
 - Be concise and direct. This is a business tool, not a chatbot.
