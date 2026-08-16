@@ -7191,9 +7191,43 @@ Only include arrays that have actual data from the document. Empty arrays are fi
                 icon: '🟢'
             }
         };
+        function agFindRelatedRecord(type, id) {
+            if (!type || !id) return null;
 
+            const recordId = String(id);
+
+            const sources = {
+                transaction: DB.transactions || [],
+                debt: DB.debts || [],
+                invoice: DB.invoices || [],
+                deal: DB.deals || []
+            };
+
+            const records = sources[String(type).toLowerCase()];
+
+            if (!records) return null;
+
+            return records.find(record => String(record.id) === recordId) || null;
+        }
+        const riskFindings = riskReview.findings || [];
+
+        const highRiskCount = riskFindings.filter(
+            f => String(f.severity || '').toLowerCase() === 'high'
+        ).length;
+
+        const mediumRiskCount = riskFindings.filter(
+            f => String(f.severity || '').toLowerCase() === 'medium'
+        ).length;
+
+        const lowRiskCount = riskFindings.filter(
+            f => String(f.severity || '').toLowerCase() === 'low'
+        ).length;
         const findingsHtml = riskReview.findings.map((f, index) => {
             const severity = severityStyle[f.severity] || severityStyle.low;
+            const relatedRecord = agFindRelatedRecord(
+                f.related_record_type,
+                f.related_record_id
+            );
 
             return `
       <div style="background:var(--w);border:1px solid var(--rule);border-left:3px solid ${severity.color};border-radius:7px;padding:12px;margin-bottom:8px">
@@ -7221,7 +7255,14 @@ Only include arrays that have actual data from the document. Empty arrays are fi
   onclick="agInvestigateRisk(${index})">
   🔎 Investigate with Ndalo
 </button>
-
+${relatedRecord ? `
+  <button
+    class="btn s"
+    style="margin-top:9px"
+    onclick="agOpenRelatedRiskRecord('${esc(f.related_record_type)}','${esc(f.related_record_id)}')">
+    📋 View Related Record
+  </button>
+` : ''}
 </div>
     `;
         }).join('');
@@ -7256,9 +7297,39 @@ Only include arrays that have actual data from the document. Empty arrays are fi
 </div>
 
 <div style="font-size:13px;color:var(--gm2);margin-bottom:12px">
-  ${riskReview.findings.length}
-  potential item${riskReview.findings.length === 1 ? '' : 's'}
+  ${riskFindings.length}
+ potential item${riskFindings.length === 1 ? '' : 's'}
   may need attention.
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+
+  <div style="flex:1;min-width:90px;background:var(--w);border:1px solid var(--rule);border-radius:6px;padding:8px">
+    <div style="font-family:var(--mono);font-size:10px;color:var(--red);text-transform:uppercase">
+      🔴 High
+    </div>
+    <div style="font-size:16px;font-weight:700;color:var(--ink);margin-top:2px">
+      ${highRiskCount}
+    </div>
+  </div>
+
+  <div style="flex:1;min-width:90px;background:var(--w);border:1px solid var(--rule);border-radius:6px;padding:8px">
+    <div style="font-family:var(--mono);font-size:10px;color:var(--amber);text-transform:uppercase">
+      🟠 Medium
+    </div>
+    <div style="font-size:16px;font-weight:700;color:var(--ink);margin-top:2px">
+      ${mediumRiskCount}
+    </div>
+  </div>
+
+  <div style="flex:1;min-width:90px;background:var(--w);border:1px solid var(--rule);border-radius:6px;padding:8px">
+    <div style="font-family:var(--mono);font-size:10px;color:var(--g);text-transform:uppercase">
+      🟢 Low
+    </div>
+    <div style="font-size:16px;font-weight:700;color:var(--ink);margin-top:2px">
+      ${lowRiskCount}
+    </div>
+  </div>
+
 </div>
   `;
     }
@@ -8594,6 +8665,9 @@ IMPORTANT:
 - Use "potential concern", "possible issue", or "requires review" when appropriate.
 - Do not invent facts, amounts, dates, clients, creditors, or transactions.
 - If there is not enough evidence for a concern, do not manufacture one.
+- When a finding relates to a specific record, include its exact existing record ID from the SMART INGEST DATA.
+- Never invent or guess a record ID.
+- If no specific record can be reliably identified, use null for the related record fields.
 - Focus on practical business/financial issues.
 
 Look for:
@@ -8615,6 +8689,8 @@ Return ONLY valid JSON in this exact structure:
       "title": "short title",
       "description": "brief explanation based only on the data",
       "recommendation": "practical next step"
+      "related_record_type": "transaction|debt|invoice|deal|null",
+      "related_record_id": "string containing an existing record ID, or null"
     }
   ]
 }
@@ -8849,6 +8925,29 @@ ${JSON.stringify(data)}
                 findings: [],
                 error: true
             };
+        }
+    }
+    function agOpenRelatedRiskRecord(type, id) {
+        if (!type || !id) {
+            toast('Related record information is missing');
+            return;
+        }
+
+        switch (String(type).toLowerCase()) {
+            case 'transaction':
+                openTxModal(id);
+                break;
+
+            case 'debt':
+                openDebtModal(id);
+                break;
+
+            case 'deal':
+                openDealModal(id);
+                break;
+
+            default:
+                toast('This record type cannot be opened yet');
         }
     }
 function agSystemPrompt() {
