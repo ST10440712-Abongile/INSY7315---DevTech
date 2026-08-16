@@ -7154,10 +7154,20 @@ Only include arrays that have actual data from the document. Empty arrays are fi
     <div style="display:flex;gap:8px">
       ${txCount>0?`<button class="btn s" onclick="commitIngestTransactions()" style="flex:1">Save ${txCount} Transactions</button>`:''}
       ${debtCount>0?`<button class="btn" onclick="commitIngestDebts()" style="flex:1;border-color:var(--amber);color:var(--amber)">Save ${debtCount} Debts</button>`:''}
-      ${dealCount>0?`<button class="btn s" onclick="commitIngestDeals()" style="flex:1">Add ${dealCount} Opportunities</button>`:''}
+      ${dealCount > 0 ? `<button class="btn s" onclick="commitIngestDeals()" style="flex:1">Add ${dealCount} Opportunities</button>` : ''}
     </div>
-    <button class="btn" style="width:100%;margin-top:8px" onclick="resetIngest()">↺ Ingest More Documents</button>`;
 
+    <button class="btn"
+      style="width:100%;margin-top:8px;border-color:var(--g);color:var(--g);font-weight:600"
+      onclick="agAskAboutIngest()">
+      🤖 Ask Ndalo About These Results
+    </button>
+
+    <button class="btn"
+      style="width:100%;margin-top:8px"
+      onclick="resetIngest()">
+      ↺ Ingest More Documents
+    </button>`;
   // Store for commit functions
   window._ingestResults = allResults;
   btn.disabled = false;
@@ -8129,7 +8139,32 @@ function agChip(text) {
   document.getElementById('ag-chips').style.display = 'none';
   agSend();
 }
+    function agAskAboutIngest() {
+        const prompt =
+            'Analyse the Smart Ingest results from my latest document. ' +
+            'Summarise the key findings, identify anything that needs attention, ' +
+            'and recommend what I should do next.';
 
+        // Open Ndalo Agent if it is currently closed
+        if (!agentOpen) {
+            toggleAgent();
+        }
+
+        // Give the panel a moment to open before populating the input
+        setTimeout(() => {
+            const input = document.getElementById('ag-input');
+
+            if (!input) return;
+
+            input.value = prompt;
+            input.style.height = 'auto';
+            input.focus();
+
+            // Hide the default quick-action chips
+            const chips = document.getElementById('ag-chips');
+            if (chips) chips.style.display = 'none';
+        }, 150);
+    }
 // ── Handle file upload ──
 function agHandleFile(e) {
   const file = e.target.files[0];
