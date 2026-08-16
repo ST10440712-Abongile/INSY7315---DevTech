@@ -8142,9 +8142,15 @@ function agChip(text) {
     function agAskAboutIngest() {
         const prompt =
             'Analyse the Smart Ingest results from my latest document. ' +
-            'Summarise the key findings, identify anything that needs attention, ' +
-            'and recommend what I should do next.';
-
+            'Provide a clear business intelligence report using the following sections: ' +
+            '📊 OVERVIEW — summarise what was found. ' +
+            '⚠️ RISKS / CONCERNS — identify anything that may require attention. ' +
+            '💰 FINANCIAL IMPACT — explain the important financial figures or patterns. ' +
+            '🎯 RECOMMENDED ACTIONS — give practical next steps the business should consider. ' +
+            'Only use information available in the Smart Ingest context. ' +
+            'Do not invent transactions, debts, invoices, deals, amounts, or other facts. ' +
+            'If the available data is insufficient to make a conclusion, clearly say so. ' +
+            'Keep the analysis concise and business-focused.';
         // Open Ndalo Agent if it is currently closed
         if (!agentOpen) {
             toggleAgent();
