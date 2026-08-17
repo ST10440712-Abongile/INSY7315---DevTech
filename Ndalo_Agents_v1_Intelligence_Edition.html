@@ -932,6 +932,144 @@ body{font-family:var(--sans);color:var(--ink);overflow:hidden;font-size:15px;lin
 </head>
 <body>
 
+<style>
+/* ================================================================
+   MERGED AUTHENTICATION — integrated from Abby's login feature
+   Repaired for the final Ndalo Agents build.
+================================================================ */
+#auth-gate{position:fixed;inset:0;background:var(--g);display:flex;align-items:center;justify-content:center;z-index:9999;font-family:var(--sans);}
+#auth-gate.hidden{display:none;}
+.auth-box{background:var(--w);border-radius:var(--r-lg);padding:36px 34px;width:100%;max-width:380px;box-shadow:var(--shl);}
+.auth-tag{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gm2);margin-bottom:6px;}
+.auth-title{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--g);margin-bottom:22px;}
+.auth-fl{margin-bottom:14px;}
+.auth-fl label{display:block;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--gm2);margin-bottom:6px;}
+.auth-fl input{width:100%;padding:10px 12px;border:1px solid var(--rule);border-radius:var(--r-sm);font-size:14px;font-family:var(--sans);}
+.auth-fl input:focus{outline:none;border-color:var(--gm);box-shadow:0 0 0 3px rgba(15,32,68,.06);}
+.auth-err{background:#FCEBEA;color:var(--red);border:1px solid #F3B8B2;border-radius:var(--r-sm);padding:9px 12px;font-size:12.5px;margin-bottom:14px;display:none;}
+.auth-btn{width:100%;padding:11px;border:none;border-radius:var(--r-sm);background:var(--g);color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px;}
+.auth-btn:hover{background:var(--gm);}
+.auth-switch{text-align:center;font-size:13px;color:var(--gm2);margin-top:18px;}
+.auth-switch a{color:var(--g);font-weight:600;cursor:pointer;text-decoration:none;}
+.auth-switch a:hover{text-decoration:underline;}
+</style>
+<div id="auth-gate">
+  <div class="auth-box">
+    <div id="auth-login-form">
+      <div class="auth-tag">Velox</div>
+      <div class="auth-title">Welcome to Velox</div>
+      <div class="auth-err" id="login-err"></div>
+      <div class="auth-fl"><label>Username</label><input type="text" id="login-user" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div class="auth-fl"><label>Password</label><input type="password" id="login-pass" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="auth-btn" type="button" onclick="doLogin()">Sign In</button>
+      <div class="auth-switch">No account yet? <a onclick="showAuthForm('register')">Create one</a></div>
+    </div>
+    <div id="auth-register-form" style="display:none">
+      <div class="auth-tag">Velox</div>
+      <div class="auth-title">Create your account</div>
+      <div class="auth-err" id="register-err"></div>
+      <div class="auth-fl"><label>Username</label><input type="text" id="reg-user" autocomplete="username"></div>
+      <div class="auth-fl"><label>Password</label><input type="password" id="reg-pass" autocomplete="new-password"></div>
+      <div class="auth-fl"><label>Confirm Password</label><input type="password" id="reg-pass2" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()"></div>
+      <button class="auth-btn" type="button" onclick="doRegister()">Create Account</button>
+      <div class="auth-switch">Already have an account? <a onclick="showAuthForm('login')">Sign in</a></div>
+    </div>
+  </div>
+</div>
+<script>
+/* ---------------- Authentication ---------------- */
+function authUsers(){
+  try { return JSON.parse(localStorage.getItem('velox_users') || '[]'); }
+  catch(e) { return []; }
+}
+function authSaveUsers(users){
+  localStorage.setItem('velox_users', JSON.stringify(users));
+}
+function authHash(s){
+  let h=0;
+  for(let i=0;i<s.length;i++){ h=((h<<5)-h)+s.charCodeAt(i); h|=0; }
+  return 'h'+h+'_'+s.length;
+}
+function showAuthForm(which){
+  const login=document.getElementById('auth-login-form');
+  const register=document.getElementById('auth-register-form');
+  if(login) login.style.display=which==='login'?'block':'none';
+  if(register) register.style.display=which==='register'?'block':'none';
+  const le=document.getElementById('login-err');
+  const re=document.getElementById('register-err');
+  if(le) le.style.display='none';
+  if(re) re.style.display='none';
+}
+function authErr(id,msg){
+  const el=document.getElementById(id);
+  if(el){ el.textContent=msg; el.style.display='block'; }
+}
+function authSetSession(username){
+  localStorage.setItem('velox_session', JSON.stringify({username,loggedInAt:new Date().toISOString()}));
+  localStorage.setItem('velox_logged_in_user', username);
+}
+function authCurrentUser(){
+  try{
+    const raw=localStorage.getItem('velox_session');
+    if(!raw) return null;
+    const session=JSON.parse(raw);
+    return session && session.username ? session.username : null;
+  }catch(e){ return null; }
+}
+function authHideGate(){
+  const gate=document.getElementById('auth-gate');
+  if(gate) gate.classList.add('hidden');
+  const user=authCurrentUser();
+  const label=document.getElementById('auth-user-label');
+  if(label) label.textContent=user ? user : 'User';
+}
+function authShowGate(){
+  const gate=document.getElementById('auth-gate');
+  if(gate) gate.classList.remove('hidden');
+}
+function doLogin(){
+  const user=(document.getElementById('login-user')?.value || '').trim();
+  const pass=document.getElementById('login-pass')?.value || '';
+  if(!user || !pass){ authErr('login-err','Please enter both username and password.'); return; }
+  const found=authUsers().find(u=>u.username===user && u.password===authHash(pass));
+  if(!found){ authErr('login-err','Incorrect username or password.'); return; }
+  authSetSession(user);
+  authHideGate();
+  toast('Welcome back, '+user+'.');
+}
+function doRegister(){
+  const user=(document.getElementById('reg-user')?.value || '').trim();
+  const pass=document.getElementById('reg-pass')?.value || '';
+  const pass2=document.getElementById('reg-pass2')?.value || '';
+  if(!user || !pass || !pass2){ authErr('register-err','Please fill in all fields.'); return; }
+  if(user.length<3){ authErr('register-err','Username must be at least 3 characters.'); return; }
+  if(pass.length<6){ authErr('register-err','Password must be at least 6 characters.'); return; }
+  if(pass!==pass2){ authErr('register-err','Passwords do not match.'); return; }
+  const users=authUsers();
+  if(users.some(u=>u.username.toLowerCase()===user.toLowerCase())){ authErr('register-err','Username already exists.'); return; }
+  users.push({username:user,password:authHash(pass)});
+  authSaveUsers(users);
+  authSetSession(user);
+  authHideGate();
+  toast('Account created successfully.');
+}
+function authLogout(){
+  localStorage.removeItem('velox_session');
+  localStorage.removeItem('velox_logged_in_user');
+  const lu=document.getElementById('login-user');
+  const lp=document.getElementById('login-pass');
+  if(lu) lu.value='';
+  if(lp) lp.value='';
+  showAuthForm('login');
+  authShowGate();
+}
+(function initAuthentication(){
+  if(authCurrentUser()) authHideGate();
+  else authShowGate();
+})();
+</script>
+
+<!-- MERGED SECURITY: Billing and Finance are protected by the application authentication gate. -->
 <div class="shell">
 
 <header class="topbar">
@@ -972,6 +1110,8 @@ body{font-family:var(--sans);color:var(--ink);overflow:hidden;font-size:15px;lin
     <span id="sync-status" style="font-size:11px;color:rgba(255,255,255,0.45);font-family:var(--mono);letter-spacing:0.5px">Local only</span>
     <button class="tb-btn" id="sync-btn" onclick="syncNow()">Connect Drive</button>
     <button class="tb-btn" onclick="showPanel(&#39;settings&#39;)" title="Settings">⚙</button>
+    <span id="auth-user-label" style="font-size:11px;color:rgba(255,255,255,.62);font-family:var(--mono);letter-spacing:.4px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="Signed-in user"></span>
+    <button class="tb-btn" onclick="authLogout()" title="Sign out">⇥ Sign out</button>
     <button class="tb-btn" onclick="showPanel(&#39;home&#39;)">⌂ Home</button>
   </div>
 </header>
