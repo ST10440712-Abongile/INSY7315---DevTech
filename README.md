@@ -164,7 +164,7 @@ Velox was created to give Aquarius Ndalo Holdings a simpler, more secure way to 
 
 Key Features
 
-Logon Page
+Login Page
 
 Finance page authentication 
 
@@ -175,7 +175,7 @@ AI agent integration — an AI agent assists users within the app which can navi
 
 Centralized modules — proposals, pipeline, billing, finance, contacts, business, and settings, all accessible from one home page.
 
-Getting Started
+# Getting Started
 
 Login / Register — On opening the app, users are met with a login page where they can either log in to an existing account or register a new one.
 
@@ -188,14 +188,18 @@ Contacts
 Business
 Settings
 
-Finance Access
+# Finance Access
 The Finance section requires a separate, restricted login for additional security.
 so in order to test it out you must use the following information:
 
 Username: admin
 Password: Velox@2026
 
-Technical tools
+# Technical tools
+
+Firebase
+
+Node.js
 
 Languages: CSS, JavaScript, Html
 
@@ -203,7 +207,7 @@ IDE: Visual Studio 2022
 
 AI Agent: Integrated within the app to assist users
 
-Security
+# Security
 
 Velox has been designed with security as a priority, offering improved protections over previous systems, including restricted access to sensitive areas such as Finance and the overall general access to the application .
 
