@@ -1,0 +1,68 @@
+rules_version = '2';
+
+// Defense-in-depth: the Express API (using the Admin SDK, which bypasses
+// these rules) is the PRIMARY gatekeeper and the only place the full
+// Owner/Manager/Finance/Sales permission matrix (config/roles.js) is
+// enforced. These rules exist as a second line of defense for the day a
+// client ever talks to Firestore directly (e.g. a future mobile app) —
+// they enforce the coarser, non-negotiable boundary: a user may only ever
+// touch documents belonging to their own tenant (business account), never
+// someone else's, regardless of role.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    // One extra read per check, but it's what lets these rules understand
+    // the tenant model instead of just raw per-user ownership.
+    function callerTenantUid() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.tenantUid;
+    }
+    function isTenantMember(resource) {
+      return isSignedIn() && resource.data.ownerUid == callerTenantUid();
+    }
+    function willBeOwnedByCallerTenant() {
+      return isSignedIn() && request.resource.data.ownerUid == callerTenantUid();
+    }
+
+    match /users/{uid} {
+      // Users may read/update only their own profile document directly;
+      // role changes and invites go through the API (team.controller.js),
+      // which runs with Admin SDK privileges and its own authorization
+      // checks — never trust a client to grant itself a role.
+      allow read: if isSignedIn() && request.auth.uid == uid;
+      allow create: if isSignedIn() && request.auth.uid == uid;
+      allow update: if isSignedIn() && request.auth.uid == uid
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.tenantUid == resource.data.tenantUid;
+      allow delete: if false;
+    }
+
+    // Invites are only ever created/consumed by the API via the Admin
+    // SDK (which bypasses these rules) — no direct client access at all.
+    match /invites/{id} {
+      allow read, write: if false;
+    }
+
+    match /businesses/{id} {
+      allow read, update, delete: if isTenantMember(resource);
+      allow create: if willBeOwnedByCallerTenant();
+    }
+
+    match /contacts/{id} {
+      allow read, update, delete: if isTenantMember(resource);
+      allow create: if willBeOwnedByCallerTenant();
+    }
+
+    match /deals/{id} {
+      allow read, update, delete: if isTenantMember(resource);
+      allow create: if willBeOwnedByCallerTenant();
+    }
+
+    match /invoices/{id} {
+      allow read, update, delete: if isTenantMember(resource);
+      allow create: if willBeOwnedByCallerTenant();
+    }
+  }
+}
