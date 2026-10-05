@@ -97,6 +97,7 @@ Every success returns `{ data: ... }`; every failure returns
 without parsing prose.
 
 ### Security
+
 - **Authentication**: Firebase Authentication (free tier) issues signed,
   short-lived ID tokens. `middleware/auth.js` verifies the token's
   signature and expiry server-side on every request — a stolen or forged
@@ -151,7 +152,9 @@ invoices → businesses) — happy to walk through wiring up a specific panel
 next if you want to tackle them one at a time.
 INSY7315---DevTech
 
-Velox App
+YouTube Video Link: https://youtu.be/EUMpB-3WuYY
+
+# Velox App
 
 Velox is a business management application built to benefit Aquarius Ndalo Holdings Pty Ltd. It streamlines day-to-day operations by bringing proposals, pipeline tracking, billing, finance, contacts, and business management into a single, easy-to-navigate platform.
 
