@@ -1,0 +1,10 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\velox-backend",
+    "\\velox-backend\\controllers",
+    "\\velox-backend\\routes"
+  ],
+  "SelectedNode": "\\velox-backend\\controllers\\auth.controller.js",
+  "PreviewInSolutionExplorer": false
+}
