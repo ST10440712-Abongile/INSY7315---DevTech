@@ -207,3 +207,63 @@ Velox has been designed with security as a priority, offering improved protectio
 About
 
 This project is developed for and  benefits Aquarius Ndalo Holdings (Pty) Ltd, based on the foundation of the app that they started developing but we added our own features to not only improve the app but make it more secure and user-friendly.
+
+Hosting and CI/CD Pipeline
+
+Application Hosting
+
+The Velox application has been deployed using Render to provide a publicly accessible hosted environment.
+
+**Live Application:**  
+https://ndalo-agents.onrender.com
+
+The application is connected to the project's GitHub repository and is deployed from the `main` branch. Render is configured to automatically deploy new changes merged into the `main` branch, ensuring that the hosted application remains up to date with the latest approved version.
+
+GitHub Repository and Branch Management
+
+GitHub is used for source control and collaborative development. The project uses separate branches for development and feature work before changes are merged into the `main` branch.
+
+The `main` branch represents the stable version of the application and is used as the deployment branch.
+
+This branch-based workflow allows team members to develop features independently, review changes through pull requests, and merge approved changes into the stable application.
+
+GitHub Actions CI/CD Pipeline
+
+A GitHub Actions workflow has been implemented to support continuous integration and deployment.
+
+The workflow is located at:
+
+`.github/workflows/main.yml`
+
+The pipeline performs the following stages:
+
+1. **Automated Testing / Validation**
+   - Checks out the latest project code.
+   - Performs automated project checks before deployment.
+   - Ensures that changes are validated before they reach the deployment stage.
+
+2. **Automated Deployment**
+   - The deployment stage runs after the testing stage.
+   - Deployment is configured to run when changes are pushed or merged into the `main` branch.
+   - The pipeline is configured to trigger deployment to the Render hosting environment.
+
+ CI/CD Workflow
+
+The development and deployment process follows this workflow:
+
+`Feature Branch → Pull Request → main → GitHub Actions → Automated Tests → Render Deployment`
+
+This CI/CD process helps maintain code quality, provides a consistent deployment process, and reduces the need for manual deployment after approved changes are merged.
+
+ Hosting and CI/CD Responsibility
+
+**Task 2 – Hosting and GitHub/Pipeline Implementation**
+
+The hosting and CI/CD implementation was completed as part of Task 2, including:
+
+- Deployment of the Velox application to Render.
+- Configuration of the public hosted application.
+- GitHub branch and merge workflow.
+- Creation of the GitHub Actions CI/CD workflow.
+- Configuration of automated testing/validation.
+- Configuration of automated deployment to Render.
