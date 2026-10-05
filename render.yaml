@@ -1,0 +1,20 @@
+# Render Blueprint — "New +" -> "Blueprint" on render.com and point at this repo.
+# Env vars marked sync:false must be filled in manually in the Render
+# dashboard after the first deploy (never commit real secrets here).
+services:
+  - type: web
+    name: velox-api
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: CORS_ORIGINS
+        sync: false          # PLACEHOLDER — set to the live frontend URL once known
+      - key: FIREBASE_PROJECT_ID
+        sync: false          # PLACEHOLDER — from Firebase service account JSON
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false          # PLACEHOLDER — from Firebase service account JSON
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false          # PLACEHOLDER — from Firebase service account JSON
