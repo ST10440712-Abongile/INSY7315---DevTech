@@ -274,3 +274,11 @@ The hosting and CI/CD implementation was completed as part of Task 2, including:
 - Creation of the GitHub Actions CI/CD workflow.
 - Configuration of automated testing/validation.
 - Configuration of automated deployment to Render.
+
+# AI Declaration
+
+ST10440712 - Abongile Khumalo
+
+AI was used to help merge the backend and frontend of the Velox App.
+
+Link: https://claude.ai/share/157e7cdc-3e6f-4e9c-aae6-5afa34109760
